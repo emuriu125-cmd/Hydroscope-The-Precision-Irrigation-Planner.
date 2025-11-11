@@ -156,7 +156,7 @@ if page == "🌤️ Weather Guide":
         """)
 
 # ----------------------------
-# 2. CROP WATER GUIDE (The core app - UPDATED to use Active Plot)
+# 2. CROP WATER GUIDE (Updated with Kc & Season Length)
 # ----------------------------
 elif page == "🌱 Crop Water Guide":
     st.title("🌱 Crop Water Calculator (Realistic FAO CROPWAT)")
@@ -174,16 +174,20 @@ elif page == "🌱 Crop Water Guide":
         total_days = sum(crop_options_detailed[selected_crop]["Duration_Days"].values())
         growth_weeks = round(total_days / 7, 1)
         st.markdown(f"**Growth Period (weeks):** {growth_weeks} (Fixed)")
-        
-        # We need to manually add the rest of the inputs required for calculation that were in the original code
-        col_climate, col_efficiency = st.columns(2)
-        with col_climate:
-            eto_daily_avg = st.number_input("Average daily Evapotranspiration (ETo mm/day)", value=st.session_state["eto_value_input"])
-        with col_efficiency:
-            efficiency = st.slider("Irrigation Efficiency (%)", 10, 100, 75)
-        
-        effective_rain_weekly = st.number_input("Avg Effective Rainfall (mm/week)", value=10.0)
 
+        # --- New row: ETo, Effective Rain, Kc, Season Length ---
+        col1, col2, col3, col4 = st.columns(4)
+        with col1:
+            eto_daily_avg = st.number_input("Average daily ETo (mm/day)", value=st.session_state["eto_value_input"])
+        with col2:
+            effective_rain_weekly = st.number_input("Avg Effective Rainfall (mm/week)", value=10.0)
+        with col3:
+            avg_kc = st.number_input("Average Crop Coefficient (Kc)", 0.1, 3.0, 1.0)
+        with col4:
+            season_length_days = st.number_input("Season Length (days)", 1, 365, total_days)
+
+        # --- Efficiency slider below ---
+        efficiency = st.slider("Irrigation Efficiency (%)", 10, 100, 75)
 
     else:
         # Fallback to manual selection if no active plot is set
@@ -196,25 +200,31 @@ elif page == "🌱 Crop Water Guide":
             crop_name = st.text_input("Enter crop name", "Custom Crop")
             avg_kc = st.number_input("Set average Kc", 0.1, 3.0, 1.0)
             growth_weeks = col_growth.number_input("Growth period (weeks)", 1, 52, 12)
+            season_length_days = growth_weeks * 7  # approximate
         else:
             crop_name = selected_crop
             total_days = sum(crop_options_detailed[selected_crop]["Duration_Days"].values())
             growth_weeks = round(total_days / 7, 1)
             col_growth.markdown(f"**Growth Period (weeks):** {growth_weeks} (Fixed)")
-        
+            avg_kc = sum(crop_options_detailed[selected_crop]["Kc_Values"].values()) / len(crop_options_detailed[selected_crop]["Kc_Values"])
+            season_length_days = total_days
+
         acres = col_size.number_input("Farm size (acres)", 0.1, 1000.0, 5.0)
 
-        col_climate, col_efficiency = st.columns(2)
-        with col_climate:
-            eto_daily_avg = st.number_input("Average daily Evapotranspiration (ETo mm/day)", value=st.session_state["eto_value_input"])
-        with col_efficiency:
-            efficiency = st.slider("Irrigation Efficiency (%)", 10, 100, 75)
-        
-        effective_rain_weekly = st.number_input("Avg Effective Rainfall (mm/week)", value=10.0)
+        # --- New row: ETo, Effective Rain, Kc, Season Length ---
+        col1, col2, col3, col4 = st.columns(4)
+        with col1:
+            eto_daily_avg = st.number_input("Average daily ETo (mm/day)", value=st.session_state["eto_value_input"])
+        with col2:
+            effective_rain_weekly = st.number_input("Avg Effective Rainfall (mm/week)", value=10.0)
+        with col3:
+            avg_kc = st.number_input("Average Crop Coefficient (Kc)", 0.1, 3.0, avg_kc)
+        with col4:
+            season_length_days = st.number_input("Season Length (days)", 1, 365, season_length_days)
 
+        # --- Efficiency slider below ---
+        efficiency = st.slider("Irrigation Efficiency (%)", 10, 100, 75)
 
-    # The calculation button and results section (which was moved to Supply Planner)
-    # The 'Predict Water Needs' button was previously here in your code.
 
 # ----------------------------
 # 3. FARM SETUP & PLOTS (New Tab Logic)
