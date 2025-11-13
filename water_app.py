@@ -176,14 +176,14 @@ elif page == "🌱 Crop Water Guide":
 
     # Initialize state
     for key, val in {
-        "manual_acres": 1.0, "crop_selection_cw": list(crop_options_detailed.keys())[0],
+        "manual_acres": 1.0, "crop_selection_cw": list(crop_options_detailed.keys()),
         "avg_daily_eto_cw": 5.0, "effective_rain_weekly_cw": 0.0,
         "efficiency_percent_cw": 80, "c_source_cap": 1000.0,
         "c_days_apply": 7, "c_source_type": "Pump"
     }.items():
         st.session_state.setdefault(key, val)
 
-    # 2x2 Grid layout
+    # 2x2 Grid layout (Row 1)
     col1, col2 = st.columns(2)
     with col1:
         st.session_state["manual_acres"] = st.number_input(
@@ -196,17 +196,17 @@ elif page == "🌱 Crop Water Guide":
         st.session_state["avg_daily_eto_cw"] = st.number_input("Avg Daily ETo (mm/day)", value=st.session_state["avg_daily_eto_cw"])
         st.session_state["effective_rain_weekly_cw"] = st.number_input("Avg Effective Rain (mm/week)", value=st.session_state["effective_rain_weekly_cw"])
 
+    # 2x2 Grid layout (Row 2) - Items now distributed across both columns
     col3, col4 = st.columns(2)
     with col3:
         st.session_state["efficiency_percent_cw"] = st.number_input("Irrigation Efficiency (%)", value=st.session_state["efficiency_percent_cw"], min_value=1, max_value=100)
-        # Correctly indented line:
+
+    with col4: # The water source is now here, completing the 2x2 grid appearance
         st.session_state["c_source_type"] = st.selectbox(
             "Water Source Type",
             options=["Tank", "Pipes", "Pump"],
             index=["Tank", "Pipes", "Pump"].index(st.session_state["c_source_type"] or "Pump")
         )
-    # Note: the line below was duplicated in your input, removed here:
-    # st.session_state["display_supply_results"] = True 
 
     st.session_state["display_supply_results"] = True
 
