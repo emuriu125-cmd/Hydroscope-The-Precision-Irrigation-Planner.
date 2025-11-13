@@ -85,7 +85,7 @@ def deactivate_plot():
 def clear_all_plots():
     st.session_state["plots_data"].clear()
     st.session_state["active_plot_id"] = None
-    st.experimental_rerun()
+    st.rerun()
 
 def clear_supply_results():
     st.session_state["display_supply_results"] = False
