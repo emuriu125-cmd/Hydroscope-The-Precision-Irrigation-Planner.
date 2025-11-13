@@ -19,7 +19,7 @@ if "eto_value_input" not in st.session_state: st.session_state["eto_value_input"
 if "plots_data" not in st.session_state: st.session_state["plots_data"] = {}
 if "active_plot_id" not in st.session_state: st.session_state["active_plot_id"] = None
 if "saved_supply_plan_data" not in st.session_state: st.session_state["saved_supply_plan_data"] = None
-if "display_supply_results" not in st.session_state: st.session_state["display_supply_results"] = True
+if "display_supply_results" not in st.session_state: st.session_state["display_supply_results"] = False
 
 # ----------------------------
 # CROP DATA
