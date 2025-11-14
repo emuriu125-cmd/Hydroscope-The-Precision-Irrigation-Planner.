@@ -208,8 +208,6 @@ elif page == "🌱 Crop Water Guide":
             index=["Tank", "Pipes", "Pump"].index(st.session_state["c_source_type"] or "Pump")
         )
 
-    st.session_state["display_supply_results"] = True
-
     with st.expander("📱 Need Help Getting These Values?"):
         st.markdown("""
         - 🌤️ **ETo:** Use [FAO ETo Calculator](https://www.fao.org/land-water/databases-and-software/eto-calculator/en/)
